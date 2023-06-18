@@ -16,7 +16,7 @@ class Request
     /**
      * @return void
      */
-    public function resolve(): void
+    private function resolve(): void
     {
         switch ($this->requestString) {
             case '/':
