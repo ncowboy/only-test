@@ -57,7 +57,7 @@ require_once 'header.php';
                     </div>
                     <div class="mb-3">
                         <label for="password-repeat" class="form-label">Повторите пароль</label>
-                        <input type="password" class="form-control" name="password-repeat" value="<?= $form->password_repeat ?>">
+                        <input type="password" class="form-control" name="password-repeat" >
                         <?php if ($form->errors['password_repeat']): ?>
                             <div class="form-text text-danger"><?= $form->errors['password_repeat'] ?></div>
                         <?php endif; ?>

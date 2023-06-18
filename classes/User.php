@@ -4,13 +4,18 @@ namespace app\classes;
 
 class User
 {
-    public $id;
-    public $login;
-    public $phone;
-    public $email;
-    public $password_hash;
+    public int $id;
+    public string $login;
+    public string $phone;
+    public string $email;
+    public string $password_hash;
 
-    public static function findByParam($field, $value)
+    /**
+     * @param string $field
+     * @param string $value
+     * @return mixed
+     */
+    public static function findByParam(string $field, string $value)
     {
         $db = self::getDb();
 
@@ -19,16 +24,20 @@ class User
         return $db->findObject($sql, self::class, [
             ':value' => $value
         ]);
-
     }
 
-    private static function getDb()
+    private static function getDb(): Db
     {
         $config = require __DIR__ . '/../config.php';
+
         return new Db($config['db']['user'], $config['db']['pass'], $config['db']['database']);
     }
 
-    public static function findByUsername($username)
+    /**
+     * @param string $username
+     * @return mixed
+     */
+    public static function findByUsername(string $username)
     {
         $db = self::getDb();
 
@@ -51,6 +60,9 @@ class User
         return null;
     }
 
+    /**
+     * @return bool|\PDOStatement
+     */
     public function create()
     {
         $db = self::getDb();
@@ -97,6 +109,10 @@ class User
         $this->password_hash = $password_hash;
     }
 
+    /**
+     * @param ProfileForm $form
+     * @return bool|\PDOStatement
+     */
     public function update(ProfileForm $form)
     {
         $config = require __DIR__ . '/../' . 'config.php';

@@ -6,17 +6,17 @@ use PDO;
 
 class Db
 {
-    private $user;
-    private $pass;
-    private $driver;
-    private $database;
-    private $host;
-    private $charset;
+    private string $user;
+    private string $pass;
+    private string $driver;
+    private string $database;
+    private string $host;
+    private string $charset;
 
     /**
      * @var PDO|null
      */
-    protected $connect = null;
+    protected ?PDO $connect = null;
 
     public function __construct($user, $pass, $database, $driver = 'mysql', $host = 'localhost', $charset = 'UTF8')
     {
@@ -28,7 +28,10 @@ class Db
         $this->charset = $charset;
     }
 
-    protected function getConnect()
+    /**
+     * @return PDO|null
+     */
+    protected function getConnect(): ?PDO
     {
         if (empty($this->connect)) {
             $this->connect = new PDO(
@@ -47,10 +50,9 @@ class Db
     }
 
     /**
-     * Создание строки - настройки для подключения
      * @return string
      */
-    private function getDSN()
+    private function getDSN(): string
     {
         return sprintf(
             '%s:host=%s;dbname=%s;charset=%s',
@@ -62,10 +64,9 @@ class Db
     }
 
     /**
-     * Выполнение запроса
-     *
-     * @param string $sql 'SELECT * FROM users WHERE id = :id'
-     * @param array $params [':id' => 123]
+     * @param string $sql
+     * @param array $params
+     * @return false|\PDOStatement
      */
     private function query(string $sql, array $params = [])
     {
@@ -76,15 +77,11 @@ class Db
 
     /**
      * @param string $sql
+     * @param string $class
      * @param array $params
      * @return mixed
      */
-    public function find(string $sql, array $params = [])
-    {
-        return $this->query($sql, $params)->fetch();
-    }
-
-    public function findObject(string $sql, $class, array $params = [])
+    public function findObject(string $sql, string $class, array $params = [])
     {
         $PDOStatement = $this->query($sql, $params);
         $PDOStatement->setFetchMode(
@@ -95,20 +92,6 @@ class Db
     }
 
     /**
-     * Получение всех строк
-     *
-     * @param string $sql
-     * @param array $params
-     * @return mixed
-     */
-    public function findAll(string $sql, array $params = [])
-    {
-        return $this->query($sql, $params)->fetchAll();
-    }
-
-    /**
-     * Выполнение безответного запроса
-     *
      * @param string $sql
      * @param array $params
      * @return bool

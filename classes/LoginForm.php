@@ -4,18 +4,21 @@ namespace app\classes;
 
 class LoginForm
 {
-    public $username;
-    public $password;
-    public $errors = [];
-    private $_user;
+    public string $username;
+    public string $password;
+    public array $errors = [];
+    private User $_user;
 
 
-    private $labels = [
+    private array $labels = [
         'username' => 'Имя пользователя',
         'password' => 'Пароль'
     ];
 
-    public function validateForm()
+    /**
+     * @return bool
+     */
+    public function validateForm(): bool
     {
         $this->checkUsername();
         $this->checkPassword();
@@ -23,13 +26,19 @@ class LoginForm
         return empty($this->errors);
     }
 
-    public function login()
+    /**
+     * @return void
+     */
+    public function login(): void
     {
         Session::write('user_id', $this->_user->id);
     }
 
-
-    private function checkEmpty($field)
+    /**
+     * @param string $field
+     * @return bool
+     */
+    private function checkEmpty(string $field): bool
     {
         if (empty($this->$field)) {
             $this->errors[$field] = " Заполните поле {$this->labels[$field]}";
@@ -38,23 +47,25 @@ class LoginForm
         return true;
     }
 
-    private function checkUsername()
+    /**
+     * @return void
+     */
+    private function checkUsername(): void
     {
         $user = User::findByUsername($this->username);
 
         if ($this->checkEmpty('username') && !$user) {
             $this->errors['username'] = 'Пользователь не найден';
-            return false;
         }
-        $this->setUser($user);
-        return true;
 
+        $this->setUser($user);
     }
 
     /**
-     * @param mixed $user
+     * @param User $user
+     * @return void
      */
-    public function setUser($user): void
+    public function setUser(User $user): void
     {
         $this->_user = $user;
     }
@@ -75,16 +86,20 @@ class LoginForm
         $this->password = $password;
     }
 
-    private function checkPassword()
+    /**
+     * @return void
+     */
+    private function checkPassword(): void
     {
         if ($this->checkEmpty('password') && !$this->comparePassword()) {
             $this->errors['password'] = 'Неправильный пароль';
-            return false;
         }
-        return true;
     }
 
-    private function comparePassword()
+    /**
+     * @return bool
+     */
+    private function comparePassword(): bool
     {
         $config = require __DIR__ . '/../' . 'config.php';
 

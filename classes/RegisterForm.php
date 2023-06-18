@@ -4,14 +4,14 @@ namespace app\classes;
 
 class RegisterForm
 {
-    public $login;
-    public $phone;
-    public $email;
-    public $password;
-    public $password_repeat;
-    public $errors = [];
+    public string $login;
+    public string $phone;
+    public string $email;
+    public string $password;
+    public string $password_repeat;
+    public array $errors = [];
 
-    private $labels = [
+    private array $labels = [
         'login' => 'Логин',
         'phone' => 'Телефон',
         'email' => 'Email',
@@ -19,7 +19,10 @@ class RegisterForm
         'password_repeat' => 'Повтор пароля',
     ];
 
-    public function validateForm()
+    /**
+     * @return bool
+     */
+    public function validateForm(): bool
     {
         $this->checkPhone();
         $this->checkMin('phone', 7);
@@ -34,6 +37,9 @@ class RegisterForm
         return empty($this->errors);
     }
 
+    /**
+     * @return bool|\PDOStatement
+     */
     public function register()
     {
         $user = new User();
@@ -47,63 +53,77 @@ class RegisterForm
         return $user->create();
     }
 
-    private function checkPhone()
+    /**
+     * @return void
+     */
+    private function checkPhone(): void
     {
         if ($this->checkEmpty('phone') && !is_numeric($this->phone)) {
             $this->errors['phone'] = 'Номер телефона должен состоять только из цифр';
-            return false;
         }
-
-        return true;
     }
 
-    private function checkUnique($field)
+    /**
+     * @param string $field
+     * @return void
+     */
+    private function checkUnique(string $field): void
     {
         $user = User::findByParam($field, $this->$field);
         if ($this->checkEmpty($field) && $user) {
             $this->errors[$field] = "Такой {$this->labels[$field]} уже зарегистрирован в системе";
-            return false;
         }
-        return true;
     }
 
-    private function checkMinLength($field, $min)
+    /**
+     * @param string $field
+     * @param int $min
+     * @return void
+     */
+    private function checkMinLength(string $field, int $min): void
     {
         if ($this->checkEmpty($field) && mb_strlen($this->$field) < $min) {
             $this->errors[$field] = "Поле {$this->labels[$field]} должно быть не короче {$min} символов";
-            return false;
         }
-        return true;
     }
 
-    private function checkMin($field, $min)
+    /**
+     * @param string $field
+     * @param int $min
+     * @return void
+     */
+    private function checkMin(string $field, int $min): void
     {
         if ($this->checkEmpty($field) && mb_strlen((string)$this->$field) < $min) {
             $this->errors[$field] = "Поле {$this->labels[$field]} должно состоять не менее, чем из {$min} цифр";
-            return false;
         }
-        return true;
     }
 
-    private function checkEmail()
+    /**
+     * @return void
+     */
+    private function checkEmail(): void
     {
         if ($this->checkEmpty('email') && !filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
             $this->errors['email'] = 'Невалидный email';
-            return false;
         }
-        return true;
     }
 
-    private function checkPasswordEqual()
+    /**
+     * @return void
+     */
+    private function checkPasswordEqual(): void
     {
         if ($this->checkEmpty('password_repeat') && $this->password !== $this->password_repeat) {
             $this->errors['password_repeat'] = 'Введённые пароли не совпадают';
-            return false;
         }
-        return true;
     }
 
-    private function checkEmpty($field)
+    /**
+     * @param $field
+     * @return bool
+     */
+    private function checkEmpty($field): bool
     {
         if (empty($this->$field)) {
             $this->errors[$field] = " Заполните поле {$this->labels[$field]}";

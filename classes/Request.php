@@ -13,7 +13,10 @@ class Request
         $this->resolve();
     }
 
-    public function resolve()
+    /**
+     * @return void
+     */
+    public function resolve(): void
     {
         switch ($this->requestString) {
             case '/':

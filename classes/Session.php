@@ -4,24 +4,40 @@ namespace app\classes;
 
 class Session
 {
-    public static function start()
+    /**
+     * @return bool
+     */
+    public static function start(): bool
     {
         return session_start();
     }
 
-    public static function write($key, $value)
+    /**
+     * @param string $key
+     * @param string $value
+     * @return void
+     */
+    public static function write(string $key, string $value): void
     {
         self::start();
         $_SESSION[$key] = $value;
     }
 
-    public static function unset($key)
+    /**
+     * @param string $key
+     * @return void
+     */
+    public static function unset(string $key): void
     {
         self::start();
         unset($_SESSION[$key]);
     }
 
-    public static function read($key)
+    /**
+     * @param string $key
+     * @return mixed|void
+     */
+    public static function read(string $key)
     {
         self::start();
         if (isset($_SESSION[$key])) {

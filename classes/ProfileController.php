@@ -4,7 +4,9 @@ namespace app\classes;
 
 class ProfileController extends Controller
 {
-
+    /**
+     * @return void
+     */
     public function run(): void
     {
         $user = User::getUser();
@@ -20,6 +22,7 @@ class ProfileController extends Controller
 
                 $form->validateForm();
                 if (count($form->errors) === 0 && $user->update($form)) {
+                    $user = User::getUser();
                     $updated = true;
                 }
             };

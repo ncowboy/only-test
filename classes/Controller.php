@@ -4,7 +4,8 @@ namespace app\classes;
 
 abstract class Controller
 {
-    protected bool $only_auth = true;
-
+    /**
+     * @return void
+     */
     abstract public function run(): void;
 }

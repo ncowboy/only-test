@@ -4,7 +4,9 @@ namespace app\classes;
 
 class LoginController extends Controller
 {
-
+    /**
+     * @return void
+     */
     public function run(): void
     {
         $user = User::getUser();

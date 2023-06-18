@@ -4,7 +4,10 @@ namespace app\classes;
 
 class RegisterController
 {
-    public function run()
+    /**
+     * @return void
+     */
+    public function run(): void
     {
         $user = User::getUser();
         if ($user) {
@@ -23,7 +26,6 @@ class RegisterController
 
             if (count($form->errors) === 0 && $form->register()) {
                 Session::write('success', 'success');
-
                 header('Location: /login');
             }
         };

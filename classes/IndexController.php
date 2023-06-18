@@ -2,14 +2,16 @@
 
 namespace app\classes;
 
-use http\Header;
-
 class IndexController extends Controller
 
 {
+    /**
+     * @return void
+     */
     public function run(): void
     {
         $user = User::getUser();
+
         if ($user) {
             header('Location: /profile');
         } else {
